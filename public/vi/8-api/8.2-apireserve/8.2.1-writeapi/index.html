@@ -1,0 +1,1983 @@
+<!DOCTYPE html>
+<html lang="vi" class="js csstransforms3d">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="Hugo 0.124.1">
+    <meta name="description" content="">
+<meta name="author" content="journeyoftheaverageguy@gmail.com">
+
+    <link rel="icon" href="../../../../images/favicon.png" type="image/png">
+
+    <title>Viết API :: Bắt đầu với Amazon VPC và AWS VPN Site to Site</title>
+
+    
+    <link href="../../../../css/nucleus.css?1716992618" rel="stylesheet">
+    <link href="../../../../css/fontawesome-all.min.css?1716992618" rel="stylesheet">
+    <link href="../../../../css/hybrid.css?1716992618" rel="stylesheet">
+    <link href="../../../../css/featherlight.min.css?1716992618" rel="stylesheet">
+    <link href="../../../../css/perfect-scrollbar.min.css?1716992618" rel="stylesheet">
+    <link href="../../../../css/auto-complete.css?1716992618" rel="stylesheet">
+    <link href="../../../../css/atom-one-dark-reasonable.css?1716992618" rel="stylesheet">
+    <link href="../../../../css/theme.css?1716992618" rel="stylesheet">
+    <link href="../../../../css/hugo-theme.css?1716992618" rel="stylesheet">
+    
+    <link href="../../../../css/theme-workshop.css?1716992618" rel="stylesheet">
+    
+    
+
+    <script src="../../../../js/jquery-3.3.1.min.js?1716992618"></script>
+
+    <style>
+      :root #header + #content > #left > #rlblock_left{
+          display:none !important;
+      }
+      
+    </style>
+    
+  </head>
+  <body class="" data-url="../../../../vi/8-api/8.2-apireserve/8.2.1-writeapi/">
+    <nav id="sidebar" class="showVisitedLinks">
+
+
+
+  <div id="header-wrapper">
+    <div id="header">
+      <a id="logo" href="../../../../">
+
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" width="30%"><defs><style>.cls-1{fill:#fff;}.cls-2{fill:#f90;fill-rule:evenodd;}</style></defs><title>AWS-Logo_White-Color</title><path class="cls-1" d="M14.09,10.85a4.7,4.7,0,0,0,.19,1.48,7.73,7.73,0,0,0,.54,1.19.77.77,0,0,1,.12.38.64.64,0,0,1-.32.49l-1,.7a.83.83,0,0,1-.44.15.69.69,0,0,1-.49-.23,3.8,3.8,0,0,1-.6-.77q-.25-.42-.51-1a6.14,6.14,0,0,1-4.89,2.3,4.54,4.54,0,0,1-3.32-1.19,4.27,4.27,0,0,1-1.22-3.2A4.28,4.28,0,0,1,3.61,7.75,6.06,6.06,0,0,1,7.69,6.46a12.47,12.47,0,0,1,1.76.13q.92.13,1.91.36V5.73a3.65,3.65,0,0,0-.79-2.66A3.81,3.81,0,0,0,7.86,2.3a7.71,7.71,0,0,0-1.79.22,12.78,12.78,0,0,0-1.79.57,4.55,4.55,0,0,1-.58.22l-.26,0q-.35,0-.35-.52V2a1.09,1.09,0,0,1,.12-.58,1.2,1.2,0,0,1,.47-.35A10.88,10.88,0,0,1,5.77.32,10.19,10.19,0,0,1,8.36,0a6,6,0,0,1,4.35,1.35,5.49,5.49,0,0,1,1.38,4.09ZM7.34,13.38a5.36,5.36,0,0,0,1.72-.31A3.63,3.63,0,0,0,10.63,12,2.62,2.62,0,0,0,11.19,11a5.63,5.63,0,0,0,.16-1.44v-.7a14.35,14.35,0,0,0-1.53-.28,12.37,12.37,0,0,0-1.56-.1,3.84,3.84,0,0,0-2.47.67A2.34,2.34,0,0,0,5,11a2.35,2.35,0,0,0,.61,1.76A2.4,2.4,0,0,0,7.34,13.38Zm13.35,1.8a1,1,0,0,1-.64-.16,1.3,1.3,0,0,1-.35-.65L15.81,1.51a3,3,0,0,1-.15-.67.36.36,0,0,1,.41-.41H17.7a1,1,0,0,1,.65.16,1.4,1.4,0,0,1,.33.65l2.79,11,2.59-11A1.17,1.17,0,0,1,24.39.6a1.1,1.1,0,0,1,.67-.16H26.4a1.1,1.1,0,0,1,.67.16,1.17,1.17,0,0,1,.32.65L30,12.39,32.88,1.25A1.39,1.39,0,0,1,33.22.6a1,1,0,0,1,.65-.16h1.54a.36.36,0,0,1,.41.41,1.36,1.36,0,0,1,0,.26,3.64,3.64,0,0,1-.12.41l-4,12.86a1.3,1.3,0,0,1-.35.65,1,1,0,0,1-.64.16H29.25a1,1,0,0,1-.67-.17,1.26,1.26,0,0,1-.32-.67L25.67,3.64,23.11,14.34a1.26,1.26,0,0,1-.32.67,1,1,0,0,1-.67.17Zm21.36.44a11.28,11.28,0,0,1-2.56-.29,7.44,7.44,0,0,1-1.92-.67,1,1,0,0,1-.61-.93v-.84q0-.52.38-.52a.9.9,0,0,1,.31.06l.42.17a8.77,8.77,0,0,0,1.83.58,9.78,9.78,0,0,0,2,.2,4.48,4.48,0,0,0,2.43-.55,1.76,1.76,0,0,0,.86-1.57,1.61,1.61,0,0,0-.45-1.16A4.29,4.29,0,0,0,43,9.22l-2.41-.76A5.15,5.15,0,0,1,38,6.78a3.94,3.94,0,0,1-.83-2.41,3.7,3.7,0,0,1,.45-1.85,4.47,4.47,0,0,1,1.19-1.37A5.27,5.27,0,0,1,40.51.29,7.4,7.4,0,0,1,42.6,0a8.87,8.87,0,0,1,1.12.07q.57.07,1.08.19t.95.26a4.27,4.27,0,0,1,.7.29,1.59,1.59,0,0,1,.49.41.94.94,0,0,1,.15.55v.79q0,.52-.38.52a1.76,1.76,0,0,1-.64-.2,7.74,7.74,0,0,0-3.2-.64,4.37,4.37,0,0,0-2.21.47,1.6,1.6,0,0,0-.79,1.48,1.58,1.58,0,0,0,.49,1.18,4.94,4.94,0,0,0,1.83.92L44.55,7a5.08,5.08,0,0,1,2.57,1.6A3.76,3.76,0,0,1,47.9,11a4.21,4.21,0,0,1-.44,1.93,4.4,4.4,0,0,1-1.21,1.47,5.43,5.43,0,0,1-1.85.93A8.25,8.25,0,0,1,42.05,15.62Z"></path><path class="cls-2" d="M45.19,23.81C39.72,27.85,31.78,30,25,30A36.64,36.64,0,0,1,.22,20.57c-.51-.46-.06-1.09.56-.74A49.78,49.78,0,0,0,25.53,26.4,49.23,49.23,0,0,0,44.4,22.53C45.32,22.14,46.1,23.14,45.19,23.81Z"></path><path class="cls-2" d="M47.47,21.21c-.7-.9-4.63-.42-6.39-.21-.53.06-.62-.4-.14-.74,3.13-2.2,8.27-1.57,8.86-.83s-.16,5.89-3.09,8.35c-.45.38-.88.18-.68-.32C46.69,25.8,48.17,22.11,47.47,21.21Z"></path></svg>
+
+</a>
+
+    </div>
+    
+        <div class="searchbox">
+    <label for="search-by"><i class="fas fa-search"></i></label>
+    <input data-search-input id="search-by" type="search" placeholder="Search...">
+    <span data-search-clear=""><i class="fas fa-times"></i></span>
+</div>
+
+<script type="text/javascript" src="../../../../js/lunr.min.js?1716992618"></script>
+<script type="text/javascript" src="../../../../js/auto-complete.js?1716992618"></script>
+<script type="text/javascript">
+    
+        var baseurl = "\/\/localhost:1313\/\/vi";
+    
+</script>
+<script type="text/javascript" src="../../../../js/search.js?1716992618"></script>
+
+    
+  </div>
+
+    <div class="highlightable">
+    <ul class="topics">
+
+        
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/vi/1-introduce/" title="Giới thiệu chung" class="dd-item 
+        
+        
+        
+        ">
+      <a href="../../../../vi/1-introduce/">
+           <b> 1. </b> Giới thiệu chung
+          
+            <i class="fas fa-check read-icon"></i>
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/vi/2-cloudformation/" title="CloudFormation" class="dd-item 
+        
+        
+        
+        ">
+      <a href="../../../../vi/2-cloudformation/">
+           <b> 2. </b> CloudFormation
+          
+            <i class="fas fa-check read-icon"></i>
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/vi/3-connectec2/" title="Kết nối tới EC2" class="dd-item 
+        
+        
+        
+        ">
+      <a href="../../../../vi/3-connectec2/">
+           <b> 3. </b> Kết nối tới EC2
+          
+            <i class="fas fa-check read-icon"></i>
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/vi/4-cognito/" title="Cài đặt Cognito" class="dd-item 
+        
+        
+        
+        ">
+      <a href="../../../../vi/4-cognito/">
+           <b> 4. </b> Cài đặt Cognito
+          
+            <i class="fas fa-check read-icon"></i>
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/vi/5-sns/" title="Simple Notification Service" class="dd-item 
+        
+        
+        
+        ">
+      <a href="../../../../vi/5-sns/">
+           <b> 5. </b> Simple Notification Service
+          
+            <i class="fas fa-check read-icon"></i>
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/vi/6-configdb/" title="Cấu hình DB" class="dd-item 
+        
+        
+        
+        ">
+      <a href="../../../../vi/6-configdb/">
+           <b> 6. </b> Cấu hình DB
+          
+            <i class="fas fa-check read-icon"></i>
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+            
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/vi/6-configdb/6.2-dbreserve/" title="DB Reserve" class="dd-item 
+        
+        
+        
+        ">
+      <a href="../../../../vi/6-configdb/6.2-dbreserve/">
+           <b> 6.2 </b> DB Reserve
+          
+            <i class="fas fa-check read-icon"></i>
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/vi/6-configdb/6.1-dbfindflight/" title="DB tìm chuyến bay" class="dd-item 
+        
+        
+        
+        ">
+      <a href="../../../../vi/6-configdb/6.1-dbfindflight/">
+           <b> 6.1 </b> DB tìm chuyến bay
+          
+            <i class="fas fa-check read-icon"></i>
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/vi/7-configintel/" title="Intellij" class="dd-item 
+        
+        
+        
+        ">
+      <a href="../../../../vi/7-configintel/">
+           <b> 7. </b> Intellij
+          
+            <i class="fas fa-check read-icon"></i>
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/vi/8-api/" title="API" class="dd-item 
+        parent
+        
+        
+        ">
+      <a href="../../../../vi/8-api/">
+           <b> 8. </b> API
+          
+            <i class="fas fa-check read-icon"></i>
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+            
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/vi/8-api/8.2-apireserve/" title="API đặt vé" class="dd-item 
+        parent
+        
+        
+        ">
+      <a href="../../../../vi/8-api/8.2-apireserve/">
+           <b> 8.2 </b> API đặt vé
+          
+            <i class="fas fa-check read-icon"></i>
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+            
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/vi/8-api/8.2-apireserve/8.2.1-writeapi/" title="Viết API" class="dd-item 
+        
+        active
+        
+        ">
+      <a href="../../../../vi/8-api/8.2-apireserve/8.2.1-writeapi/">
+           <b> 8.2.1 </b> Viết API
+          
+            <i class="fas fa-check read-icon"></i>
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/vi/8-api/8.2-apireserve/8.2.2-testapi/" title="Kiểm thử API" class="dd-item 
+        
+        
+        
+        ">
+      <a href="../../../../vi/8-api/8.2-apireserve/8.2.2-testapi/">
+           <b> 8.2.2 </b> Kiểm thử API
+          
+            <i class="fas fa-check read-icon"></i>
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/vi/8-api/8.1-apifindflight/" title="" class="dd-item 
+        
+        
+        
+        ">
+      <a href="../../../../vi/8-api/8.1-apifindflight/">
+          
+          
+            <i class="fas fa-check read-icon"></i>
+          
+      </a>
+      
+      
+        <ul>
+          
+          
+            
+          
+          
+          
+        
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/vi/8-api/8.1-apifindflight/8.1.1-writeapi/" title="Viết API" class="dd-item 
+        
+        
+        
+        ">
+      <a href="../../../../vi/8-api/8.1-apifindflight/8.1.1-writeapi/">
+           <b> 8.1.1 </b> Viết API
+          
+            <i class="fas fa-check read-icon"></i>
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+            
+          
+            
+            
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/vi/8-api/8.1-apifindflight/8.1.2-testapi/" title="Kiểm thử API" class="dd-item 
+        
+        
+        
+        ">
+      <a href="../../../../vi/8-api/8.1-apifindflight/8.1.2-testapi/">
+           <b> 8.1.2 </b> Kiểm thử API
+          
+            <i class="fas fa-check read-icon"></i>
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+            
+          
+        
+        </ul>
+              
+    </li>
+  
+ 
+
+          
+          
+
+
+
+
+ 
+  
+    
+    <li data-nav-id="/vi/9-cleanup/" title="Dọn dẹp tài nguyên" class="dd-item 
+        
+        
+        
+        ">
+      <a href="../../../../vi/9-cleanup/">
+           <b> 9. </b> Dọn dẹp tài nguyên
+          
+            <i class="fas fa-check read-icon"></i>
+          
+      </a>
+      
+              
+    </li>
+  
+ 
+
+          
+         
+    </ul>
+
+    
+    
+      <section id="shortcuts">
+        <h3>More</h3>
+        <ul>
+          
+              <li> 
+                  <a class="padding" href="http://awsstudygroup.com"><i class='fab fa-aws'></i> AWS Study Group - Blog</a>
+              </li>
+          
+              <li> 
+                  <a class="padding" href="https://www.facebook.com/groups/awsstudygroupfcj"><i class='fab fa-facebook'></i> AWS Study Group - Nhóm FB</a>
+              </li>
+          
+        </ul>
+      </section>
+    
+
+    
+    <section id="prefooter">
+      <hr/>
+      <ul>
+      
+        <li>
+          <a class="padding">
+            <i class="fas fa-language fa-fw"></i>
+          <div class="select-style">
+            <select id="select-language" onchange="location = this.value;">
+          
+          
+          
+              
+              
+                  
+                    
+                    
+                      <option id="en" value="//localhost:1313/8-api/8.2-apireserve/8.2.1-writeapi/">English</option>
+                    
+                  
+              
+                  
+              
+          
+              
+              
+                  
+              
+                  
+                    
+                    
+                      <option id="vi" value="//localhost:1313/vi/8-api/8.2-apireserve/8.2.1-writeapi/" selected>Tiếng Việt</option>
+                    
+                  
+              
+          
+        </select>
+        <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+          width="255px" height="255px" viewBox="0 0 255 255" style="enable-background:new 0 0 255 255;" xml:space="preserve">
+          <g>
+            <g id="arrow-drop-down">
+              <polygon points="0,63.75 127.5,191.25 255,63.75 		" />
+            </g>
+          </g>
+        </svg>
+        </div>
+        </a>
+        </li>
+      
+      
+      
+        <li><a class="padding" href="#" data-clear-history-toggle=""><i class="fas fa-history fa-fw"></i> Clear History</a></li>
+      
+      </ul>
+    </section>
+    
+    <section id="footer">
+      <left>
+    
+     <b> Workshop</b> <br>
+    <img src="https://hitwebcounter.com/counter/counter.php?page=7920860&style=0038&nbdigits=9&type=page&initCount=0" title="Migrate" Alt="web counter"   border="0" /></a>  <br>
+     <b> <a href="https://cloudjourney.awsstudygroup.com/">Cloud Journey</a></b> <br>
+    <img src="https://hitwebcounter.com/counter/counter.php?page=7830807&style=0038&nbdigits=9&type=page&initCount=0" title="Total CLoud Journey" Alt="web counter"   border="0"   />
+     
+</left>
+<left>
+    <br>
+    <br>
+        <b> Last Updated </b> <br>
+        <i><font color=orange>26-11-2023</font></i>
+    </left>
+    <left>
+        <br>
+        <br>
+            <b> Team </b> <br>
+            <i> <a href="https://www.linkedin.com/in/jotaguy"  style="color:orange">Gia Hưng </a> <br>
+        </i>
+        </left>
+
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+
+    </section>
+  </div>
+</nav>
+
+
+
+
+        <section id="body">
+        <div id="overlay"></div>
+        <div class="padding highlightable">
+              
+              <div>
+                <div id="top-bar">
+                
+                
+                <div id="breadcrumbs" itemscope="" itemtype="http://data-vocabulary.org/Breadcrumb">
+                    <span id="sidebar-toggle-span">
+                        <a href="#" id="sidebar-toggle" data-sidebar-toggle="">
+                          <i class="fas fa-bars"></i>
+                        </a>
+                    </span>
+                  
+                  <span id="toc-menu"><i class="fas fa-list-alt"></i></span>
+                  
+                  <span class="links">
+                 
+                 
+                    
+          
+          
+            
+            
+          
+          
+            
+            
+          
+          
+            
+            
+          
+          
+            <a href='../../../../vi/'>Start with Cognito, SNS, Secrete</a> > <a href='../../../../vi/8-api/'>API</a> > <a href='../../../../vi/8-api/8.2-apireserve/'>API đặt vé</a> > Viết API
+          
+        
+          
+        
+          
+        
+          
+        
+                 
+                  </span>
+                </div>
+                
+                    <div class="progress">
+    <div class="wrapper">
+<nav id="TableOfContents">
+  <ul>
+    <li><a href="#viết-api">Viết API</a></li>
+  </ul>
+</nav>
+    </div>
+</div>
+
+                
+              </div>
+            </div>
+            
+        <div id="head-tags">
+        
+        </div>
+        
+        <div id="body-inner">
+          
+            <h1>
+              
+              Viết API
+            </h1>
+          
+
+        
+
+
+
+	<h2 id="viết-api">Viết API</h2>
+<ol>
+<li>Tạo model class</li>
+</ol>
+<ul>
+<li>Mở <strong>Passenger.java</strong> dán đoạn code sau đây</li>
+</ul>
+<pre tabindex="0"><code>package com.airlines.catalog.model;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+import javax.persistence.*;
+import javax.persistence.GenerationType;
+
+/* Build a Passenger Entity class with columns passengerId as Identity auto generated, adult, gender, firstName,
+lastName mapped to passenger table, column names sepetated by _*/
+@Getter
+@Setter
+@NoArgsConstructor
+@Accessors(chain = true)
+@Entity
+@Table(name = &#34;passenger&#34;)
+public class Passenger {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = &#34;passenger_id&#34;)
+    private int passengerId;
+    @Column(name = &#34;adult&#34;)
+    private boolean adult;
+    @Column(name = &#34;gender&#34;)
+    private String gender;
+    @Column(name = &#34;first_name&#34;)
+    private String firstName;
+    @Column(name = &#34;last_name&#34;)
+    private String lastName;
+    //Create a tostring method to convert the object to string
+    @Override
+    public String toString() {
+        return &#34;Passenger{&#34; +
+                &#34;passengerId=&#34; + passengerId +
+                &#34;, adult=&#34; + adult +
+                &#34;, gender=&#39;&#34; + gender + &#39;\&#39;&#39; +
+                &#34;, firstName=&#39;&#34; + firstName + &#39;\&#39;&#39; +
+                &#34;, lastName=&#39;&#34; + lastName + &#39;\&#39;&#39; +
+                &#39;}&#39;;
+    }
+
+    public int getPassengerId() {
+        return passengerId;
+    }
+
+    public void setPassengerId(int passengerId) {
+        this.passengerId = passengerId;
+    }
+
+    public boolean isAdult() {
+        return adult;
+    }
+
+    public void setAdult(boolean adult) {
+        this.adult = adult;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    //Create a toJson method to convert the object to Json String
+    public String toJson() {
+        return &#34;{&#34; +
+                &#34;\&#34;passengerId\&#34;:&#34; + passengerId +
+                &#34;, \&#34;adult\&#34;:&#34; + adult +
+                &#34;, \&#34;gender\&#34;:\&#34;&#34; + gender + &#39;\&#34;&#39; +
+                &#34;, \&#34;firstName\&#34;:\&#34;&#34; + firstName + &#39;\&#34;&#39; +
+                &#34;, \&#34;lastName\&#34;:\&#34;&#34; + lastName + &#39;\&#34;&#39; +
+                &#39;}&#39;;
+    }
+}
+</code></pre><ul>
+<li>Mở <strong>Reservation.java</strong> dán đoạn code sau đây</li>
+</ul>
+<pre tabindex="0"><code>package com.airlines.catalog.model;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import javax.persistence.*;
+
+/* Build a Reservation Entity class  mapped to database table reservation
+  Attributes for the class:
+  bookingReference as long identity autogenerated,
+  passengerId, flightId, reservationDate, reservationTime,reservationStatus, travelClass,
+  ticketPrice as double, currencyCode, paymentStatus, paymentMode, contactNumber,
+  contactEmail mapped to column names seperated by _ */
+@Getter
+@Setter
+@NoArgsConstructor
+@Accessors(chain = true)
+@Entity
+@Table(name = &#34;reservation&#34;)
+public class Reservation {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = &#34;booking_reference&#34;)
+    private long bookingReference;
+    @Column(name = &#34;passenger_id&#34;)
+    private int passengerId;
+    @Column(name = &#34;flight_id&#34;)
+    private int flightId;
+    @Column(name = &#34;reservation_date&#34;)
+    private String reservationDate;
+    @Column(name = &#34;reservation_time&#34;)
+    private String reservationTime;
+    @Column(name = &#34;reservation_status&#34;)
+    private String reservationStatus;
+    @Column(name = &#34;travel_class&#34;)
+    private String travelClass;
+    @Column(name = &#34;ticket_price&#34;)
+    private double ticketPrice;
+    @Column(name = &#34;currency_code&#34;)
+    private String currencyCode;
+    @Column(name = &#34;payment_status&#34;)
+    private String paymentStatus;
+    @Column(name = &#34;payment_mode&#34;)
+    private String paymentMode;
+    @Column(name = &#34;contact_number&#34;)
+    private String contactNumber;
+    @Column(name = &#34;contact_email&#34;)
+    private String contactEmail;
+
+    //Create a tostring method to convert the object to string
+    @Override
+    public String toString() {
+        return &#34;Reservation{&#34; +
+                &#34;bookingReference=&#34; + bookingReference +
+                &#34;, passengerId=&#34; + passengerId +
+                &#34;, flightId=&#34; + flightId +
+                &#34;, reservationDate=&#39;&#34; + reservationDate + &#39;\&#39;&#39; +
+                &#34;, reservationTime=&#39;&#34; + reservationTime + &#39;\&#39;&#39; +
+                &#34;, reservationStatus=&#39;&#34; + reservationStatus + &#39;\&#39;&#39; +
+                &#34;, travelClass=&#39;&#34; + travelClass + &#39;\&#39;&#39; +
+                &#34;, ticketPrice=&#34; + ticketPrice +
+                &#34;, currencyCode=&#39;&#34; + currencyCode + &#39;\&#39;&#39; +
+                &#34;, paymentStatus=&#39;&#34; + paymentStatus + &#39;\&#39;&#39; +
+                &#34;, paymentMode=&#39;&#34; + paymentMode + &#39;\&#39;&#39; +
+                &#34;, contactNumber=&#39;&#34; + contactNumber + &#39;\&#39;&#39; +
+                &#34;, contactEmail=&#39;&#34; + contactEmail + &#39;\&#39;&#39; +
+                &#39;}&#39;;
+    }
+    //Create a toJson method to convert the object to Json String
+    public String toJson() {
+        return &#34;{&#34; +
+                &#34;\&#34;bookingReference\&#34;:&#34; + bookingReference +
+                &#34;, \&#34;passengerId\&#34;:&#34; + passengerId +
+                &#34;, \&#34;flightId\&#34;:&#34; + flightId +
+                &#34;, \&#34;reservationDate\&#34;:\&#34;&#34; + reservationDate + &#39;\&#34;&#39; +
+                &#34;, \&#34;reservationTime\&#34;:\&#34;&#34; + reservationTime + &#39;\&#34;&#39; +
+                &#34;, \&#34;reservationStatus\&#34;:\&#34;&#34; + reservationStatus + &#39;\&#34;&#39; +
+                &#34;, \&#34;travelClass\&#34;:\&#34;&#34; + travelClass + &#39;\&#34;&#39; +
+                &#34;, \&#34;ticketPrice\&#34;:&#34; + ticketPrice +
+                &#34;, \&#34;currencyCode\&#34;:\&#34;&#34; + currencyCode + &#39;\&#34;&#39; +
+                &#34;, \&#34;paymentStatus\&#34;:\&#34;&#34; + paymentStatus + &#39;\&#34;&#39; +
+                &#34;, \&#34;paymentMode\&#34;:\&#34;&#34; + paymentMode + &#39;\&#34;&#39; +
+                &#34;, \&#34;contactNumber\&#34;:\&#34;&#34; + contactNumber + &#39;\&#34;&#39; +
+                &#34;, \&#34;contactEmail\&#34;:\&#34;&#34; + contactEmail + &#39;\&#34;&#39; +
+                &#39;}&#39;;
+    }
+
+    public long getBookingReference() {
+        return bookingReference;
+    }
+
+    public void setBookingReference(long bookingReference) {
+        this.bookingReference = bookingReference;
+    }
+
+    public int getPassengerId() {
+        return passengerId;
+    }
+
+    public void setPassengerId(int passengerId) {
+        this.passengerId = passengerId;
+    }
+
+    public int getFlightId() {
+        return flightId;
+    }
+
+    public void setFlightId(int flightId) {
+        this.flightId = flightId;
+    }
+
+    public String getReservationDate() {
+        return reservationDate;
+    }
+
+    public void setReservationDate(String reservationDate) {
+        this.reservationDate = reservationDate;
+    }
+
+    public String getReservationTime() {
+        return reservationTime;
+    }
+
+    public void setReservationTime(String reservationTime) {
+        this.reservationTime = reservationTime;
+    }
+
+    public String getReservationStatus() {
+        return reservationStatus;
+    }
+
+    public void setReservationStatus(String reservationStatus) {
+        this.reservationStatus = reservationStatus;
+    }
+
+    public String getTravelClass() {
+        return travelClass;
+    }
+
+    public void setTravelClass(String travelClass) {
+        this.travelClass = travelClass;
+    }
+
+    public double getTicketPrice() {
+        return ticketPrice;
+    }
+
+    public void setTicketPrice(double ticketPrice) {
+        this.ticketPrice = ticketPrice;
+    }
+
+    public String getCurrencyCode() {
+        return currencyCode;
+    }
+
+    public void setCurrencyCode(String currencyCode) {
+        this.currencyCode = currencyCode;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getPaymentMode() {
+        return paymentMode;
+    }
+
+    public void setPaymentMode(String paymentMode) {
+        this.paymentMode = paymentMode;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
+    }
+
+    public String getContactEmail() {
+        return contactEmail;
+    }
+
+    public void setContactEmail(String contactEmail) {
+        this.contactEmail = contactEmail;
+    }
+}
+</code></pre><ol start="2">
+<li>Tạo một ReservationDetails DTO class sẽ được dùng để kiểm tra tất cả và giữ tham số đầu vào được cung cấp tới API đặt chuyến bay.</li>
+</ol>
+<ul>
+<li>Mở <strong>ReservationDetails.java</strong> dán đoạn code sau đây</li>
+</ul>
+<pre tabindex="0"><code>package com.airlines.catalog.dto;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import javax.validation.constraints.*;
+
+/* Create a class ReservationDetails with attributes
+firstName not blank, lastName not blank,
+gender, age between 1 and 120, flightId as int, travelClass not blank,
+ticketPrice as double and not blank,
+currencyCode exactly  3 characters, reservationStatus,  paymentStatus,
+paymentMode,  ContactEmail should be valid email, contactNumber should be valid phone number
+*/
+@Getter
+@Setter
+@NoArgsConstructor
+@Accessors(chain = true)
+public class ReservationDetails {
+    @NotBlank(message = &#34;First Name is required&#34;)
+    private String firstName;
+    @NotBlank(message = &#34;Last Name is required&#34;)
+    private String lastName;
+    private String gender;
+    @Min(value = 1, message = &#34;Age should be greater than 1&#34;)
+    @Max(value = 120, message = &#34;Age should be less than 120&#34;)
+    private int age;
+    @NotNull(message = &#34;Flight Id is required&#34;)
+    private int flightId;
+    @NotBlank(message = &#34;Travel Class is required&#34;)
+    private String travelClass;
+    @NotNull(message = &#34;Ticket Price is required&#34;)
+    private double ticketPrice;
+    @NotBlank(message = &#34;Currency Code is required&#34;)
+    @Pattern(regexp = &#34;^[A-Z]{3}$&#34;, message = &#34;Currency Code should be exactly 3 characters&#34;)
+    private String currencyCode;
+    private String reservationStatus;
+    private String paymentStatus;
+    private String paymentMode;
+    @Email(message = &#34;Contact Email should be valid email&#34;)
+    private String contactEmail;
+    // Phone Number should be 12 or more digits and starts with +
+    @Pattern(regexp = &#34;^\\+[0-9]{12,}$&#34;, message = &#34;Contact Number should be valid phone number&#34;)
+    private String contactNumber;
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public int getFlightId() {
+        return flightId;
+    }
+
+    public void setFlightId(int flightId) {
+        this.flightId = flightId;
+    }
+
+    public String getTravelClass() {
+        return travelClass;
+    }
+
+    public void setTravelClass(String travelClass) {
+        this.travelClass = travelClass;
+    }
+
+    public double getTicketPrice() {
+        return ticketPrice;
+    }
+
+    public void setTicketPrice(double ticketPrice) {
+        this.ticketPrice = ticketPrice;
+    }
+
+    public String getCurrencyCode() {
+        return currencyCode;
+    }
+
+    public void setCurrencyCode(String currencyCode) {
+        this.currencyCode = currencyCode;
+    }
+
+    public String getReservationStatus() {
+        return reservationStatus;
+    }
+
+    public void setReservationStatus(String reservationStatus) {
+        this.reservationStatus = reservationStatus;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getPaymentMode() {
+        return paymentMode;
+    }
+
+    public void setPaymentMode(String paymentMode) {
+        this.paymentMode = paymentMode;
+    }
+
+    public String getContactEmail() {
+        return contactEmail;
+    }
+
+    public void setContactEmail(String contactEmail) {
+        this.contactEmail = contactEmail;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
+    }
+}
+</code></pre><ol start="3">
+<li>Dựng JPA Repository Interfaces để truy cập dữ liệu từ bảng trong MYSQL. Chỉ định mẫu câu truy vấn để lưu dữ liệu tới bảng passenger và reservation.</li>
+</ol>
+<ul>
+<li>Mở <strong>PassengerRepository.java</strong> dán đoạn code sau đây</li>
+</ul>
+<pre tabindex="0"><code>package com.airlines.catalog.repository;
+
+import com.airlines.catalog.model.Passenger;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+
+/* create jpa repository interface PassengerRepository.
+Add a method to save Passenger. */
+@Repository
+public interface PassengerRepository extends JpaRepository&lt;Passenger, Integer&gt; {
+    Passenger save(Passenger passenger);
+}
+</code></pre><ul>
+<li>Mở <strong>ReservationRepository.java</strong> dán đoạn code sau đây</li>
+</ul>
+<pre tabindex="0"><code>package com.airlines.catalog.repository;
+
+import com.airlines.catalog.model.Reservation;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+// Create interface ReservationRepository that extends JpaRepository.
+// Add a method to save reservation.
+@Repository
+public interface ReservationRepository extends JpaRepository&lt;Reservation, Long&gt; {
+
+    Reservation save(Reservation reservation);
+}
+</code></pre><ol start="4">
+<li>Tạo exception handler classes để xử lý các nghiệp vụ: Invalid data inputs to the reservation API, invalid flight Id and no seats available in the flight.</li>
+</ol>
+<ul>
+<li>Mở <strong>FlightNotFoundException.java</strong> dán đoạn code sau đây</li>
+</ul>
+<pre tabindex="0"><code>package com.airlines.catalog.exception;
+
+import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import lombok.Getter;
+/*
+Create a public class FlightNotFoundException that extends Runtime Exception with member variable
+response entity.
+Create constructor with flightId as input parameter
+Exception message returned should be &#34;No flights found for the flight id &#34; and append flight id
+*/
+@Getter
+public class FlightNotFoundException extends RuntimeException {
+    private ResponseEntity&lt;String&gt; responseEntity;
+
+    public FlightNotFoundException(long flightId) {
+        responseEntity = new ResponseEntity&lt;&gt;(&#34;No flights found for the flight id &#34; + flightId, HttpStatus.NOT_FOUND);
+    }
+}
+</code></pre><ul>
+<li>Mở <strong>RequestedSeatsNotAvailable.java</strong> dán đoạn code sau đây</li>
+</ul>
+<pre tabindex="0"><code>package com.airlines.catalog.exception;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+/*
+Create a public class RequestedSeatsNotAvailable that extends Runtime Exception with member variable
+response entity, constructor has no arguments
+exception message returned should be &#34;Seats not available. Reservation could not be made&#34;
+*/
+@Getter
+public class RequestedSeatsNotAvailable extends RuntimeException {
+    private ResponseEntity&lt;String&gt; responseEntity;
+
+    public RequestedSeatsNotAvailable() {
+        responseEntity = new ResponseEntity&lt;&gt;(&#34;Seats not available. Reservation could not be made&#34;, HttpStatus.NOT_FOUND);
+    }
+}
+</code></pre><ul>
+<li>Mở <strong>GlobalExceptionHandler.java</strong> dán đoạn code sau đây</li>
+</ul>
+<pre tabindex="0"><code>package com.airlines.catalog.exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+/*create a rest controller advice GlobalExceptionHandler*/
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+    //create exception handler handleValidationErrors to handle validation errors
+    // get all the errors from exception
+    // get the  errors and add them to the map
+    // create a new response entity
+    // return the response entity
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity&lt;Map&lt;String, String&gt;&gt; handleValidationErrors(MethodArgumentNotValidException ex) {
+        Map&lt;String, String&gt; errors = new HashMap&lt;&gt;();
+        List&lt;FieldError&gt; fieldErrors = ex.getBindingResult().getFieldErrors();
+        fieldErrors.forEach(error -&gt; errors.put(error.getField(), error.getDefaultMessage()));
+        return new ResponseEntity&lt;&gt;(errors, HttpStatus.BAD_REQUEST);
+    }
+}
+</code></pre><ol start="5">
+<li>Build the FlightBooking service class that creates a new database transaction to save the passenger, reservation data into respective tables and also send an SNS notification to reservation-success topic. An email notification will be sent to the configured email address. This method will also check for seat availability before proceeding with the reservation and throw an business exception, if seats are not available.</li>
+</ol>
+<ul>
+<li>Mở <strong>FlightBooking.java</strong> dán đoạn code sau đây</li>
+</ul>
+<pre tabindex="0"><code>package com.airlines.catalog.service;
+
+import com.airlines.catalog.exception.FlightNotFoundException;
+import com.airlines.catalog.exception.RequestedSeatsNotAvailable;
+import com.airlines.catalog.model.Flight;
+import com.airlines.catalog.model.Passenger;
+import com.airlines.catalog.model.Reservation;
+import com.airlines.catalog.repository.FlightRepository;
+import com.airlines.catalog.repository.PassengerRepository;
+import com.airlines.catalog.repository.ReservationRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.sns.SnsClient;
+import software.amazon.awssdk.services.sns.model.PublishRequest;
+import software.amazon.awssdk.services.sns.model.PublishResponse;
+
+@Service
+public class FlightBooking {
+
+    /* create a method send message with sns arn and AWS Region as input parameter*/
+    public void sendMessage(String message, String arn, Region region) {
+        SnsClient snsClient = SnsClient.builder()
+                .region(region)
+                .build();
+
+        PublishRequest request = PublishRequest.builder()
+                .message(message)
+                .topicArn(arn)
+                .build();
+
+        PublishResponse result = snsClient.publish(request);
+        System.out.println(result.messageId() + &#34; Message sent. Status is &#34; + result.sdkHttpResponse().statusCode());
+        snsClient.close();
+
+
+    }
+
+    /*Create reserveFlight method with passenger, reservation, passengerRepository,
+reservationRepository,flightresultsRepository, number of passengers as input parameters.
+Method should return a Boolean output
+Get the flight details by calling findById method from FlightresultsRepository with
+flightId as input parameter
+if no result is null throw FlightNotFoundException
+If number of seats is less than number of passengers throw RequestedSeatsNotAvailable exception with
+flightId as input parameter
+Call getseatAvailable from flight object to get the available seats
+If seats available is less than number of passengers then return false
+If seats available is greater than or equal to number of passengers then
+    decrease the seats available attribute in flight object by calling setseatAvailable method
+    Save the passenger and get the passenger id
+    update the reservation object with the passenger id
+    save the reservation details
+    call sendMessage by passing reservation json string as input parameter
+    Method should return True or False based on the result of save methods
+All of the above steps should be done within a transaction.
+ */
+    @Transactional(propagation = Propagation.REQUIRED)
+    public Boolean reserveFlight(Passenger passenger, Reservation reservation,
+                                 PassengerRepository passengerRepository, ReservationRepository reservationRepository, FlightRepository flightRepository,
+                                 int numberOfPassengers, String topicArn, Region region) throws FlightNotFoundException, RequestedSeatsNotAvailable {
+        Flight flight = flightRepository.findById(reservation.getFlightId());
+        if (flight == null) {
+            throw new FlightNotFoundException(reservation.getFlightId());
+        }
+        if (flight.getSeatAvailable() &lt; numberOfPassengers) {
+            throw new RequestedSeatsNotAvailable();
+        }
+        flight.setSeatAvailable(flight.getSeatAvailable() - numberOfPassengers);
+        flightRepository.save(flight);
+        Passenger passenger1 = passengerRepository.save(passenger);
+        reservation.setPassengerId(passenger1.getPassengerId());
+        reservationRepository.save(reservation);
+        sendMessage(reservation.toString(), topicArn, region);
+        return true;
+
+    }
+}
+</code></pre><ol start="8">
+<li>Tạo the book flight API Controller</li>
+</ol>
+<ul>
+<li>Mở <strong>FlightReservation.java</strong> dán đoạn code sau đây</li>
+</ul>
+<pre tabindex="0"><code>package com.airlines.catalog.controller;
+
+import java.nio.channels.ScatteringByteChannel;
+import java.util.List;
+import com.airlines.catalog.dto.FlightDetails;
+import com.airlines.catalog.exception.AuthenticationException;
+import com.airlines.catalog.repository.AirportRepository;
+import com.airlines.catalog.repository.FlightRepository;
+import com.airlines.catalog.service.FlightDetailsService;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import com.airlines.catalog.repository.PassengerRepository;
+import com.airlines.catalog.repository.ReservationRepository;
+import com.airlines.catalog.service.FlightBooking;
+import com.airlines.catalog.dto.ReservationDetails;
+import com.airlines.catalog.exception.FlightNotFoundException;
+import com.airlines.catalog.exception.RequestedSeatsNotAvailable;
+import com.airlines.catalog.model.Passenger;
+import com.airlines.catalog.model.Reservation;
+import org.springframework.web.bind.annotation.*;
+import software.amazon.awssdk.regions.Region;
+import javax.validation.Valid;
+
+
+
+@RestController
+public class FlightReservation {
+    @Autowired
+    FlightRepository flightresultsRepository;
+    @Autowired
+    AirportRepository airportresultsRepository;
+    @Autowired
+    FlightDetailsService FlightDetailsService;
+
+    @Autowired
+    PassengerRepository passengerRepository;
+    @Autowired
+    ReservationRepository reservationRepository;
+    @Autowired
+    FlightBooking flightBooking;
+
+    @Value(&#34;${cognito.userpool.id}&#34;)
+    private String cognitoUserPoolId;
+    @Value(&#34;${aws.region}&#34;)
+    private String awsRegion;
+    @Value(&#34;${sns.arn}&#34;)
+    private String snsTopicArn;
+
+    /* Create a private method verifyToken to verify JWT token with input parameters as
+    Cognito user pool id, AWS region and token string. Function returns a Boolean.
+    Construct the Cognito well known url and then verify the token using RSA Algorithm.
+    catch all Exception throw new authenticationException.*/
+    private Boolean verifyToken(String cognitoUserPoolId, String awsRegion, String token) throws AuthenticationException {
+        try {
+            System.out.println(&#34;token=&#34; + token);
+
+            String cognitoWellKnownUrl = &#34;https://&#34;+ cognitoUserPoolId + &#34;/.well-known/jwks.json&#34;;
+            Algorithm algorithm = Algorithm.RSA256(new AwsCognitoRSAKeyProvider(cognitoWellKnownUrl));
+            JWTVerifier verifier = JWT.require(algorithm).build();
+            DecodedJWT decodedJWT = verifier.verify(token);
+            return true;
+        } catch (Exception e) {
+            throw new AuthenticationException(e);
+        }
+    }
+
+    /* Create a rest controller getFlightDetails to get flight details with HTTP GET Method ,
+   /flight path and request parameters as departure date, departure airport code and arrival airport code
+   JWT Token in the Authorization Header.
+   Rest controller returns a ResponseEntity of string.
+   */
+    @GetMapping(&#34;/flight&#34;)
+    public ResponseEntity&lt;String&gt; getFlightDetails(@RequestParam(&#34;departureDate&#34;) String departureDate,
+                                                   @RequestParam(&#34;departureAirportCode&#34;) String departureAirportCode,
+                                                   @RequestParam(&#34;arrivalAirportCode&#34;) String arrivalAirportCode,
+                                                   @RequestHeader(&#34;Authorization&#34;) String authorization) throws AuthenticationException {
+        /* Call verifyToken method, catch authentication exception and return the responseEntity
+    if token is valid and call the findFlights method in FlightDetailsService class
+    with input parameters  departure date, departure airport code,
+    arrival airport code, flightResultsRepository and airportResultsRepository.
+    If flights are found return the list of flights otherwise return &#34;No flights found&#34;.
+    If authentication failed the return &#34;Authentication failed&#34; and HTTP status of forbidden
+    */
+        try {
+            if (verifyToken(cognitoUserPoolId, awsRegion, authorization)) {
+                List&lt;FlightDetails&gt; flights = FlightDetailsService.findFlights(departureDate, departureAirportCode, arrivalAirportCode, flightresultsRepository, airportresultsRepository);
+                if (flights.size() &gt; 0) {
+                    return new ResponseEntity&lt;&gt;(flights.toString(), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity&lt;&gt;(&#34;No flights found&#34;, HttpStatus.OK);
+                }
+            } else {
+                return new ResponseEntity&lt;&gt;(&#34;Authentication failed&#34;, HttpStatus.FORBIDDEN);
+            }
+        } catch (AuthenticationException e) {
+            return e.getResponseEntity();
+        }
+
+    }
+
+    /* Create a rest controller bookFlight to get flight details with HTTP POST Method ,
+/reserve path and request body reservationDetails. Rest controller returns a ResponseEntity of string.
+Authorization token is passed in the header of the request.
+*/
+    @PostMapping(&#34;/reserve&#34;)
+    public ResponseEntity&lt;String&gt; bookFlight(@RequestBody @Valid ReservationDetails reservationDetails,
+                                             @RequestHeader(&#34;Authorization&#34;) String authorization)
+            throws AuthenticationException, FlightNotFoundException, RequestedSeatsNotAvailable {
+        ResponseEntity&lt;String&gt; responseEntity = null;
+        /*validate the token by calling verifyToken method in a try catch block.
+Catch authenticationExceptionHandler exception return the response entity object
+from the exception object*/
+
+        try {
+            if (verifyToken(cognitoUserPoolId, awsRegion, authorization)) {
+                /* create passenger object assign first name, last name and gender of passenger object from reservationDetails object */
+                Passenger passenger = new Passenger();
+                passenger.setFirstName(reservationDetails.getFirstName());
+                passenger.setLastName(reservationDetails.getLastName());
+                passenger.setGender(reservationDetails.getGender());
+                //Check the age from reservationDetails object and populate adult field
+                if (reservationDetails.getAge() &gt;= 18) {
+                    passenger.setAdult(true);
+                }
+                /* create reservation object Assign flightId, travelClass, ticketPrice, currencyCode,contactEmail,
+                 contactNumber, reservationStatus, paymentStatus, paymentMode */
+                Reservation reservation = new Reservation();
+                reservation.setFlightId(reservationDetails.getFlightId());
+                reservation.setTravelClass(reservationDetails.getTravelClass());
+                reservation.setTicketPrice(reservationDetails.getTicketPrice());
+                reservation.setCurrencyCode(reservationDetails.getCurrencyCode());
+                reservation.setContactEmail(reservationDetails.getContactEmail());
+                reservation.setContactNumber(reservationDetails.getContactNumber());
+                reservation.setReservationStatus(&#34;Pending&#34;);
+                reservation.setPaymentStatus(&#34;Pending&#34;);
+                reservation.setPaymentMode(&#34;Cash&#34;);
+                /* set the date reservation date in yyyy-MM-dd format and
+                reservation time in HH:mm:ss format for current date and time*/
+                reservation.setReservationDate(java.time.LocalDate.now().toString());
+                reservation.setReservationTime(java.time.LocalTime.now().toString());
+
+                Boolean result;
+                try {
+                    int noOfPassengers = 1;
+                    Region region = Region.of(awsRegion);
+                    result = flightBooking.reserveFlight(passenger, reservation, passengerRepository,
+                            reservationRepository, flightresultsRepository, noOfPassengers, snsTopicArn, region);
+                }
+                catch (FlightNotFoundException e) {
+                    return e.getResponseEntity();
+                }
+                catch (RequestedSeatsNotAvailable e) {
+                    return e.getResponseEntity();
+                }
+                /* check if the reservation is successful
+                 return response entity object with HTTP status of ok and
+                message &#34;reservation made successfully&#34; appending the booking Reference
+                if the reservation is not successful
+                return response entity object with HTTP status of bad request */
+                if (result) {
+                    responseEntity = new ResponseEntity&lt;&gt;(&#34;Reservation made successfully. Booking Reference: &#34; + reservation.getBookingReference(), HttpStatus.OK);
+                }
+                else {
+                    responseEntity = new ResponseEntity&lt;&gt;(&#34;Reservation failed&#34;, HttpStatus.BAD_REQUEST);
+                }
+
+            }
+        } catch (AuthenticationException e) {
+            responseEntity = e.getResponseEntity();
+        }
+        return responseEntity;
+    }
+}
+</code></pre>
+
+
+
+
+<footer class=" footline" >
+	
+</footer>
+
+        
+        </div> 
+        
+
+      </div>
+
+    <div id="navigation">
+        
+        
+        
+        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                        
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+        
+        
+
+
+	 
+	 
+		
+			<a class="nav nav-prev" href="../../../../vi/8-api/8.2-apireserve/" title="API đặt vé"> <i class="fa fa-chevron-left"></i></a>
+		
+		
+			<a class="nav nav-next" href="../../../../vi/8-api/8.2-apireserve/8.2.2-testapi/" title="Kiểm thử API" style="margin-right: 0px;"><i class="fa fa-chevron-right"></i></a>
+		
+	
+    </div>
+
+    </section>
+    
+    <div style="left: -1000px; overflow: scroll; position: absolute; top: -1000px; border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;">
+      <div style="border: none; box-sizing: content-box; height: 200px; margin: 0px; padding: 0px; width: 200px;"></div>
+    </div>
+    <script src="../../../../js/clipboard.min.js?1716992618"></script>
+    <script src="../../../../js/perfect-scrollbar.min.js?1716992618"></script>
+    <script src="../../../../js/perfect-scrollbar.jquery.min.js?1716992618"></script>
+    <script src="../../../../js/jquery.sticky.js?1716992618"></script>
+    <script src="../../../../js/featherlight.min.js?1716992618"></script>
+    <script src="../../../../js/highlight.pack.js?1716992618"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <script src="../../../../js/modernizr.custom-3.6.0.js?1716992618"></script>
+    <script src="../../../../js/learn.js?1716992618"></script>
+    <script src="../../../../js/hugo-learn.js?1716992618"></script>
+
+    <link href="../../../../mermaid/mermaid.css?1716992618" rel="stylesheet" />
+    <script src="../../../../mermaid/mermaid.js?1716992618"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+    <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-158079754-2', 'auto');
+  ga('send', 'pageview');
+
+</script>
+  </body>
+</html>

@@ -1,1 +1,1 @@
-# AWS-ws2-cognito
+# fcj-workshop2-cognito
